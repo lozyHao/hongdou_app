@@ -1,0 +1,1 @@
+flutter run --release --dart-define=mode=staging
