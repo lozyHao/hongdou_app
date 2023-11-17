@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hongdou_app/model/screen_size.dart';
 import 'package:hongdou_app/page/home/component/bottom_container.dart';
+import 'package:hongdou_app/page/home/component/home_drawer.dart';
 import 'package:hongdou_app/page/home/component/top_container.dart';
 import 'package:hongdou_app/util/assets.dart';
 import 'package:video_player/video_player.dart';
@@ -26,6 +27,10 @@ class _HomeState extends State<Home> {
   double bottomBarHeight = 0;
 
   late VideoPlayerController _videoController;
+
+  // 控制侧边栏
+  late bool showNavigationDrawer;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -61,6 +66,11 @@ class _HomeState extends State<Home> {
     });
   }
 
+  /// 侧边栏
+  void setAnchor(status) {
+    scaffoldKey.currentState!.openDrawer();
+  }
+
   /// 设置声音开关
   void setVideoVolume(status) {
     if (status) {
@@ -83,6 +93,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -140,6 +151,7 @@ class _HomeState extends State<Home> {
                             width: screenWidth,
                             onPlay: setVideoPlay,
                             onVolume: setVideoVolume,
+                            onAnchor: setAnchor,
                           ),
                         ),
                         Listener(
@@ -228,23 +240,21 @@ class _HomeState extends State<Home> {
                 }
               },
               onPointerMove: (PointerMoveEvent event) {
-                if (event.delta.dx >= -1 && event.delta.dx <= 1) {
-                  final double = event.delta.dy;
-                  if (double < 0) {
-                    if (currentHeight <= maxHeight) {
-                      setState(() {
-                        currentHeight = currentHeight - event.delta.dy;
-                      });
-                    }
-                  } else {
-                    if (currentHeight >= minHeight) {
-                      setState(() {
-                        currentHeight = currentHeight - event.delta.dy;
-                      });
-                    }
+                final double = event.delta.dy;
+                if (double < 0) {
+                  if (currentHeight <= maxHeight) {
+                    setState(() {
+                      currentHeight = currentHeight - event.delta.dy;
+                    });
+                  }
+                } else {
+                  if (currentHeight >= minHeight) {
+                    setState(() {
+                      currentHeight = currentHeight - event.delta.dy;
+                    });
                   }
                 }
-                print("x:${event.delta.dx}--y:${event.delta.dy}");
+                // print("x:${event.delta.dx}--y:${event.delta.dy}");
               },
               child: AnimatedContainer(
                 duration: Duration(milliseconds: isDrag == true ? 0 : 200),
@@ -265,6 +275,7 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
+      drawer: HomeDrawer(statusBarHeight: statusBarHeight),
     );
   }
 }

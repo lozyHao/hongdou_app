@@ -428,45 +428,82 @@ class _MenuListState extends State<MenuList> {
   ];
 
   final int itemsPerPage = 8; // 每页显示的菜单数量
+  int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     int totalPages = (menuList.length / itemsPerPage).ceil(); // 总页数
-    return PageView.builder(
-      itemCount: totalPages,
-      itemBuilder: (context, pageIndex) {
-        int startIndex = pageIndex * itemsPerPage;
-        int endIndex = (startIndex + itemsPerPage) < menuList.length
-            ? (startIndex + itemsPerPage)
-            : menuList.length;
 
-        List<Widget> pageItems =
-            menuList.sublist(startIndex, endIndex).map((menu) {
-          return Column(
-            children: [
-              Image(
-                height: 28.w,
-                image: AssetImage(menu['icon']),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                menu['name'],
-                style: TextStyle(fontSize: 12.sp),
-              ),
-            ],
-          );
-        }).toList();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          child: PageView.builder(
+            itemCount: totalPages,
+            itemBuilder: (context, pageIndex) {
+              int startIndex = pageIndex * itemsPerPage;
+              int endIndex = (startIndex + itemsPerPage) < menuList.length
+                  ? (startIndex + itemsPerPage)
+                  : menuList.length;
 
-        return GridView.count(
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 4,
-          crossAxisSpacing: 12.w,
-          mainAxisSpacing: 12.w,
-          childAspectRatio: 1.2,
-          padding: EdgeInsets.only(top: 12.w),
-          children: pageItems,
-        );
-      },
+              List<Widget> pageItems =
+                  menuList.sublist(startIndex, endIndex).map((menu) {
+                return Column(
+                  children: [
+                    Image(
+                      height: 28.w,
+                      image: AssetImage(menu['icon']),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      menu['name'],
+                      style: TextStyle(fontSize: 12.sp),
+                    ),
+                  ],
+                );
+              }).toList();
+
+              return GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 4,
+                crossAxisSpacing: 12.w,
+                mainAxisSpacing: 12.w,
+                childAspectRatio: 1.2,
+                padding: EdgeInsets.only(top: 12.w),
+                children: pageItems,
+              );
+            },
+            onPageChanged: (value) {
+              setState(() {
+                currentPage = value;
+              });
+            },
+          ),
+        ),
+        SizedBox(
+          height: 10.h,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: getPageDot(totalPages),
+          ),
+        )
+      ],
     );
+  }
+
+  List<Widget> getPageDot(total) {
+    List<Widget> list = [];
+    for (int i = 0; i < total; i++) {
+      list.add(AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: 4.h,
+        width: currentPage == i ? 16.w : 6.w,
+        margin: EdgeInsets.symmetric(horizontal: 2.w),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(2.w)),
+      ));
+    }
+    return list;
   }
 }

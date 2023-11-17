@@ -30,9 +30,8 @@ class _LoveDatingRecordState extends State<LoveDatingRecord> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(height: 52.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hongdou_app/component/love_dating_record.dart';
-import 'package:hongdou_app/page/home/component/double_avatar.dart';
+import 'package:hongdou_app/component/double_avatar.dart';
 import 'package:hongdou_app/util/assets.dart';
 
 class TopContainer extends StatefulWidget {
@@ -10,11 +12,14 @@ class TopContainer extends StatefulWidget {
     required this.width,
     required this.onPlay,
     required this.onVolume,
+    required this.onAnchor,
   });
 
   final double width;
   final Function(bool) onPlay;
   final Function(bool) onVolume;
+
+  final Function(bool) onAnchor;
 
   @override
   State<TopContainer> createState() => _TopContainerState();
@@ -32,29 +37,29 @@ class _TopContainerState extends State<TopContainer> {
       children: [
         // 头部
         Container(
-          height: 64.h,
+          height: 52.h,
           width: double.infinity,
-          padding: EdgeInsets.only(top: 12.h, left: 12.w, right: 12.w),
+          padding: EdgeInsets.only(left: 12.w, right: 12.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 40.w,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    widget.onAnchor(true);
+                  },
                   icon: const Icon(
                     Icons.sort_outlined,
                     color: Colors.white,
                   ),
                 ),
               ),
-              SizedBox(
-                width: 200.w,
-                child: DoubleAvatar(
-                  myAvatar: Assets.men,
-                  taAvatar: Assets.women,
-                  size: 48.w,
-                ),
+              DoubleAvatar(
+                myAvatar: Assets.men,
+                taAvatar: Assets.women,
+                size: 44.w,
               ),
               SizedBox(width: 40.w),
             ],
@@ -95,7 +100,7 @@ class _TopContainerState extends State<TopContainer> {
                 opacity: openButton ? 1 : 0.4,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  width: openButton ? 140.w : 46.w,
+                  width: openButton ? 140.w : 52.w,
                   height: 46.h,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -118,40 +123,44 @@ class _TopContainerState extends State<TopContainer> {
                         ),
                         // 播放开关
                         Expanded(
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                play = !play;
-                              });
-                              widget.onPlay(play);
-                            },
-                            icon: play
-                                ? const Icon(
-                                    Icons.pause,
-                                    color: Assets.colorGray5,
-                                  )
-                                : const Icon(
-                                    Icons.play_arrow,
-                                  ),
+                          child: ClipRect(
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  play = !play;
+                                });
+                                widget.onPlay(play);
+                              },
+                              icon: play
+                                  ? const Icon(
+                                      Icons.pause,
+                                      color: Assets.colorGray5,
+                                    )
+                                  : const Icon(
+                                      Icons.play_arrow,
+                                    ),
+                            ),
                           ),
                         ),
                         // 声音开关
                         Expanded(
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                volume = !volume;
-                              });
-                              widget.onVolume(volume);
-                            },
-                            icon: volume
-                                ? const Icon(
-                                    Icons.volume_off,
-                                    color: Assets.colorGray5,
-                                  )
-                                : const Icon(
-                                    Icons.volume_down,
-                                  ),
+                          child: ClipRect(
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  volume = !volume;
+                                });
+                                widget.onVolume(volume);
+                              },
+                              icon: volume
+                                  ? const Icon(
+                                      Icons.volume_off,
+                                      color: Assets.colorGray5,
+                                    )
+                                  : const Icon(
+                                      Icons.volume_down,
+                                    ),
+                            ),
                           ),
                         ),
                       ],

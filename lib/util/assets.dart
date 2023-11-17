@@ -37,8 +37,8 @@ class Assets {
   static const bg20 = 'assets/image/bg20.png';
   static const bg30 = 'assets/image/bg30.png';
   // 头像
-  static const women = 'assets/image/my_avatar.jpg';
-  static const men = 'assets/image/ta_avatar.jpg';
+  static const men = 'assets/image/my_avatar.jpg';
+  static const women = 'assets/image/ta_avatar.jpg';
 
   /// 视频
   static const vlog = 'assets/video/vlog.mp4';
